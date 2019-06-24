@@ -18,6 +18,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyCharacterMap;
@@ -96,11 +97,16 @@ public class SplashView extends FrameLayout {
     private void setImage(String imageUrl) {
         int screenWidth = ContextUtils.getSreenWidth(weakReference.get());
         int screenHeight = ContextUtils.getSreenHeight(weakReference.get());
-        if (weakReference.get() != null && !weakReference.get().isDestroyed()){
-            mImageLoader.displayImage(weakReference.get(),imageUrl,splashImageView);
-            if (currentPosition < advertList.size() - 1)
-                mImageLoader.preDisplayImage(weakReference.get(),advertList.get(currentPosition+1).getImageurl());
+        try {
+            if (weakReference.get() != null && !weakReference.get().isDestroyed()){
+                mImageLoader.displayImage(weakReference.get(),imageUrl,splashImageView);
+                if (currentPosition < advertList.size() - 1)
+                    mImageLoader.preDisplayImage(weakReference.get(),advertList.get(currentPosition+1).getImageurl());
+            }
+        }catch (Exception e){
+            Log.i("Splashview","e="+e.getMessage());
         }
+
 
     }
 
@@ -190,7 +196,6 @@ public class SplashView extends FrameLayout {
                                       @Nullable OnSplashViewActionListener listener,
                                       @Nullable ImageLoaderInterface imageLoader) {
 
-        if (advertList == null || advertList.get(0) == null) return;
         //设置splashView放在布局最顶层
         ViewGroup contentView = (ViewGroup) activity.getWindow().getDecorView().findViewById(android.R.id.content);
         if (null == contentView || 0 == contentView.getChildCount()) {
@@ -200,6 +205,10 @@ public class SplashView extends FrameLayout {
         splashView.setSplashView(splashView);
         RelativeLayout.LayoutParams param = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         splashView.setOnSplashImageClickListener(listener);
+        if (advertList == null || advertList.size() == 0) {
+            splashView.dismissSplashView(false);
+            return;
+        }
         //设置上下状态栏
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
             View decorView = activity.getWindow().getDecorView();
