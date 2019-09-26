@@ -247,11 +247,10 @@ public class SplashView extends FrameLayout {
     public void dismissSplashView(){
         handler.removeCallbacks(timerRunnable);
     }
-    public void dismissSplashView(boolean initiativeDismiss) {
-        if (null != mOnSplashViewActionListener) mOnSplashViewActionListener.onSplashViewDismiss(initiativeDismiss);
-
+    public void dismissSplashView(final boolean initiativeDismiss) {
         handler.removeCallbacks(timerRunnable);
         final ViewGroup parent = (ViewGroup) this.getParent();
+        showSystemUi(initiativeDismiss);
         if (null != parent) {
             @SuppressLint("ObjectAnimatorBinding") ObjectAnimator animator = ObjectAnimator.ofFloat(SplashView.this, "scale", 0.0f, 0.5f).setDuration(600);
             animator.start();
@@ -273,13 +272,13 @@ public class SplashView extends FrameLayout {
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     parent.removeView(SplashView.this);
-                    showSystemUi();
+                    //showSystemUi(initiativeDismiss);
                 }
 
                 @Override
                 public void onAnimationCancel(Animator animation) {
                     parent.removeView(SplashView.this);
-                    showSystemUi();
+                    //showSystemUi(initiativeDismiss);
                 }
 
                 @Override
@@ -295,7 +294,7 @@ public class SplashView extends FrameLayout {
         boolean hasHomeKey = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_HOME);
         return (!(hasBackKey && hasHomeKey));
     }
-    private void showSystemUi() {
+    private void showSystemUi(boolean initiativeDismiss) {
         weakReference.get().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         if (weakReference.get() instanceof AppCompatActivity) {
             ActionBar supportActionBar = ((AppCompatActivity) weakReference.get()).getSupportActionBar();
@@ -313,6 +312,7 @@ public class SplashView extends FrameLayout {
             if (isNavigationBarAvailable())//判断是否有华为虚拟键，隐藏虚拟键
                 decorView.setSystemUiVisibility(previousSysytemUi);
         }
+        if (null != mOnSplashViewActionListener) mOnSplashViewActionListener.onSplashViewDismiss(initiativeDismiss);
     }
 
     private static boolean isExistsLocalSplashData(Activity activity) {
