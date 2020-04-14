@@ -63,6 +63,7 @@ public class SplashView extends FrameLayout {
     private ImageLoaderInterface mImageLoader;
     private boolean isActionBarShowing = true;
     private int previousSysytemUi = SYSTEM_UI_FLAG_FULLSCREEN;
+    private int previousStatusColor;
     private WeakReference<Activity> weakReference = null;
     private OnSplashViewActionListener mOnSplashViewActionListener = null;
 
@@ -209,15 +210,23 @@ public class SplashView extends FrameLayout {
             splashView.dismissSplashView(false);
             return;
         }
+        //开始加载图片
+        int durationTime = advertList.get(0).getDuration();
+        String firstImage = advertList.get(0).getImageurl();
+        splashView.setDuration(durationTime);
+        splashView.setImage(firstImage == null ? "" : firstImage);
         //设置上下状态栏
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            splashView.previousStatusColor = activity.getWindow().getStatusBarColor();
+            activity.getWindow().setStatusBarColor(Color.TRANSPARENT);
             View decorView = activity.getWindow().getDecorView();
             if (isNavigationBarAvailable()){//判断是否有华为虚拟键，隐藏虚拟键
                 splashView.previousSysytemUi = decorView.getSystemUiVisibility();
-                decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_HIDE_NAVIGATION|View.SYSTEM_UI_FLAG_IMMERSIVE);
+                decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE|View.SYSTEM_UI_FLAG_FULLSCREEN|View.SYSTEM_UI_FLAG_HIDE_NAVIGATION|View.SYSTEM_UI_FLAG_IMMERSIVE);
             }
-        }
-        activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }else{
+            activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }*/
         if (activity instanceof AppCompatActivity) {
             ActionBar supportActionBar = ((AppCompatActivity) activity).getSupportActionBar();
             if (null != supportActionBar) {
@@ -232,11 +241,7 @@ public class SplashView extends FrameLayout {
                 actionBar.hide();
             }
         }
-        //开始加载图片
-        int durationTime = advertList.get(0).getDuration();
-        String firstImage = advertList.get(0).getImageurl();
-        splashView.setDuration(durationTime);
-        splashView.setImage(firstImage == null ? "" : firstImage);
+
 
         contentView.addView(splashView, param);
     }
@@ -259,8 +264,8 @@ public class SplashView extends FrameLayout {
                 public void onAnimationUpdate(ValueAnimator animation) {
                     float cVal = (Float) animation.getAnimatedValue();
                     SplashView.this.setAlpha(1.0f - 2.0f * cVal);
-                    SplashView.this.setScaleX(1.0f + cVal);
-                    SplashView.this.setScaleY(1.0f + cVal);
+                    /*SplashView.this.setScaleX(1.0f + cVal);
+                    SplashView.this.setScaleY(1.0f + cVal);*/
                 }
             });
             animator.addListener(new Animator.AnimatorListener() {
@@ -307,11 +312,17 @@ public class SplashView extends FrameLayout {
                 if (isActionBarShowing) actionBar.show();
             }
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
             View decorView = weakReference.get().getWindow().getDecorView();
-            if (isNavigationBarAvailable())//判断是否有华为虚拟键，隐藏虚拟键
+            if (isNavigationBarAvailable()){
                 decorView.setSystemUiVisibility(previousSysytemUi);
-        }
+                decorView.setFitsSystemWindows(true);
+            }
+            if (previousStatusColor != 0)
+                weakReference.get().getWindow().setStatusBarColor(previousStatusColor);
+        }else{
+            weakReference.get().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }*/
         if (null != mOnSplashViewActionListener) mOnSplashViewActionListener.onSplashViewDismiss(initiativeDismiss);
     }
 

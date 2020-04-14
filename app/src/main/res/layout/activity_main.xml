@@ -13,11 +13,17 @@
         android:onClick="show"/>
 
     <TextView
+        android:id="@+id/textviewId"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
-        android:text="不得真假，不做挣扎，不惧笑话"
+        android:text="底部虚拟键测试是否遮挡"
         android:gravity="center"
         android:textSize="20sp"
         android:background="#ff0"/>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/textviewId" />
 </RelativeLayout>
