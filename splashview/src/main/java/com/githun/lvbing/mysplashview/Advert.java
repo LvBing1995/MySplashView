@@ -15,7 +15,7 @@ public class Advert implements Parcelable{
     private String linkurl;
     private String imageurl;
     private int duration;
-
+    private int is_superscript = 1;//0：不显示倒计时，1：显示倒计时
     public Advert() {
     }
 
@@ -23,6 +23,7 @@ public class Advert implements Parcelable{
         linkurl = in.readString();
         imageurl = in.readString();
         duration = in.readInt();
+        is_superscript = in.readInt();
     }
 
     public static final Creator<Advert> CREATOR = new Creator<Advert>() {
@@ -61,6 +62,14 @@ public class Advert implements Parcelable{
         this.duration = duration;
     }
 
+    public int getIs_superscript() {
+        return is_superscript;
+    }
+
+    public void setIs_superscript(int is_superscript) {
+        this.is_superscript = is_superscript;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -71,5 +80,6 @@ public class Advert implements Parcelable{
         dest.writeString(linkurl);
         dest.writeString(imageurl);
         dest.writeInt(duration);
+        dest.writeInt(is_superscript);
     }
 }

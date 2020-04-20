@@ -71,6 +71,7 @@ public class SplashView extends FrameLayout {
     private Runnable timerRunnable = new Runnable() {
         @Override
         public void run() {
+            if (duration >= 3600) {handler.removeCallbacks(timerRunnable); return;}
             if (weakReference.get() == null || weakReference.get().isDestroyed()){dismissSplashView(false); return;}
             handleDuration();
             if (!(0 == duration && currentPosition == advertList.size() - 1)){
@@ -85,6 +86,7 @@ public class SplashView extends FrameLayout {
                 dismissSplashView(false);
             } else if (duration == 0){//一张图片结束进入下一张
                 currentPosition++;
+                skipButton.setVisibility(advertList.get(currentPosition).getIs_superscript() == 1 ? VISIBLE : GONE);
                 int nextDuration = advertList.get(currentPosition).getDuration();
                 if (nextDuration <= 0){ handleDuration(); return;}
                 setDuration(nextDuration);
@@ -140,6 +142,7 @@ public class SplashView extends FrameLayout {
         skipButtonLayoutParams.height= 80;
         skipButton.setGravity(Gravity.CENTER);
         skipButton.setTextColor(weakReference.get().getResources().getColor(android.R.color.white));
+        if (advertList != null && advertList.size() > 0) skipButton.setVisibility(advertList.get(currentPosition).getIs_superscript() == 1 ? VISIBLE : GONE);
         if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN){
             skipButton.setBackground(splashSkipButtonBg);
         }else{
@@ -157,7 +160,11 @@ public class SplashView extends FrameLayout {
         });
 
         setDuration(duration);
-        handler.postDelayed(timerRunnable, delayTime);
+        if (duration >= 3600){
+            skipButton.setVisibility(GONE);
+        }else{
+            handler.postDelayed(timerRunnable, delayTime);
+        }
     }
 
     private SplashView mSplashView;
