@@ -71,9 +71,9 @@ public class SplashView extends FrameLayout {
     private Runnable timerRunnable = new Runnable() {
         @Override
         public void run() {
-            if (duration >= 3600) {handler.removeCallbacks(timerRunnable); return;}
-            if (weakReference.get() == null || weakReference.get().isDestroyed()){dismissSplashView(false); return;}
+            if (weakReference == null || weakReference.get() == null || weakReference.get().isDestroyed()){dismissSplashView(false); return;}
             handleDuration();
+            if (duration >= 3600){handler.removeCallbacks(timerRunnable);return;}
             if (!(0 == duration && currentPosition == advertList.size() - 1)){
                 handler.postDelayed(timerRunnable, delayTime);
             }else {
@@ -86,10 +86,10 @@ public class SplashView extends FrameLayout {
                 dismissSplashView(false);
             } else if (duration == 0){//一张图片结束进入下一张
                 currentPosition++;
-                skipButton.setVisibility(advertList.get(currentPosition).getIs_superscript() == 1 ? VISIBLE : GONE);
                 int nextDuration = advertList.get(currentPosition).getDuration();
                 if (nextDuration <= 0){ handleDuration(); return;}
                 setDuration(nextDuration);
+                skipButton.setVisibility((advertList.get(currentPosition).getIs_superscript() == 1 && nextDuration < 3600) ? VISIBLE : GONE);
                 setImage(advertList.get(currentPosition).getImageurl() == null ? "" : advertList.get(currentPosition).getImageurl());
             }else {
                 setDuration(--duration);

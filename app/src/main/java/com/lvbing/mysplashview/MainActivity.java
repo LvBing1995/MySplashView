@@ -28,12 +28,11 @@ public class MainActivity extends AppCompatActivity {
     public void show(View view) {
         List<Advert> advertList = new ArrayList<>();
         Advert advert = new Advert();
-        advert.setDuration(5);
+        advert.setDuration(2);
        // advert.setImageurl("https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2746975318,973909212&fm=26&gp=0.jpg");
         advert.setImageurl("https://o.cztvcloud.com/233/advert/2019/09/24/6be44ae35d6b4f9dbe37a3bcdef819ac.jpg");
-        advert.setIs_superscript(0);
         Advert advert1 = new Advert();
-        advert1.setDuration(4);
+        advert1.setDuration(3600);
         advert1.setImageurl("https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1226171028,3121416593&fm=26&gp=0.jpg");
         advertList.add(advert);
         advertList.add(advert1);
